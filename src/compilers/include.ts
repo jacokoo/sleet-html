@@ -2,9 +2,7 @@ import * as fs from 'fs'
 import * as path from 'path'
 
 import { TagCompiler } from './tag'
-import { SleetNode, Tag, StringValue, IdentifierValue } from 'sleet/lib/ast'
-import { Compiler, Context } from 'sleet/lib/context'
-import { parse } from 'sleet/lib/parser'
+import { Compiler, Context, parse, SleetNode, StringValue, IdentifierValue, Tag } from 'sleet'
 
 export class IncludeCompiler extends TagCompiler {
     static create (node: SleetNode, stack: SleetNode[]): Compiler | undefined {

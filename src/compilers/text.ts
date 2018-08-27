@@ -1,5 +1,4 @@
-import { Compiler, Context } from 'sleet/lib/context'
-import { NodeType, SleetNode, Tag } from 'sleet/lib/ast'
+import { Compiler, Context, NodeType, SleetNode, Tag } from 'sleet'
 
 const map: {[name: string]: string} = {
     '&': '&amp;',

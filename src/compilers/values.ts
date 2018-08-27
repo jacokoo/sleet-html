@@ -1,5 +1,7 @@
-import { Compiler, Context } from 'sleet/lib/context'
-import { NodeType, SleetNode, SleetValue, StringValue, BooleanValue, NumberValue, IdentifierValue } from 'sleet/lib/ast'
+import {
+    Compiler, Context, NodeType, SleetNode, SleetValue,
+    StringValue, BooleanValue, NumberValue, IdentifierValue
+} from 'sleet'
 
 abstract class ValueCompiler<T extends SleetValue<any>> implements Compiler {
     private value: T

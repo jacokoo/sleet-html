@@ -1,5 +1,4 @@
-import { Compiler, Context } from 'sleet/lib/context'
-import { NodeType, SleetNode, AttributeGroup, Attribute } from 'sleet/lib/ast'
+import { Compiler, Context, SleetNode, Attribute, NodeType, AttributeGroup } from 'sleet'
 
 export class AttributeGroupCompiler implements Compiler {
     static type = NodeType.AttributeGroup

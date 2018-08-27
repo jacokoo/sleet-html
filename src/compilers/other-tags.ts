@@ -1,6 +1,5 @@
+import { Compiler, Context, SleetNode, Tag, StringValue } from 'sleet'
 import { TagCompiler } from './tag'
-import { SleetNode, Tag, StringValue } from 'sleet/lib/ast'
-import { Compiler, Context } from 'sleet/lib/context'
 
 export class CommentCompiler extends TagCompiler {
     static create (node: SleetNode, stack: SleetNode[]): Compiler | undefined {

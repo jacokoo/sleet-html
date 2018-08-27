@@ -1,6 +1,5 @@
 import { TagCompiler } from './tag'
-import { SleetNode, Tag } from 'sleet/lib/ast'
-import { Compiler, Context } from 'sleet/lib/context'
+import { Compiler, Context, SleetNode, Tag } from 'sleet'
 
 interface Mixin {
     nodes: SleetNode[]

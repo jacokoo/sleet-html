@@ -1,5 +1,4 @@
-import { NodeType, SleetNode, Tag, Attribute, StringValue, Location, AttributeGroup } from 'sleet/lib/ast'
-import { Context, Compiler } from 'sleet/lib/context'
+import { Context, Compiler, Location, NodeType, SleetNode, Tag, Attribute, StringValue, AttributeGroup } from 'sleet'
 
 export class TagCompiler implements Compiler {
     static type = NodeType.Tag

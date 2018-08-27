@@ -1,6 +1,4 @@
-import { SleetPlugin, SleetOptions, SleetOutput } from 'sleet'
-import { CompileResult } from 'sleet/lib/ast'
-import { Context } from 'sleet/lib/context'
+import { SleetPlugin, SleetOptions, SleetOutput, Context, CompileResult } from 'sleet'
 import { TagCompiler, EmptyTagCompiler } from './compilers/tag'
 import { TextCompiler } from './compilers/text'
 import { CommentCompiler, DoctypeCompiler, IeifCompiler, EchoCompiler } from './compilers/other-tags'
