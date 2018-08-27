@@ -14,7 +14,7 @@ export declare class TagCompiler implements Compiler {
     tagClose(context: Context): void;
     selfClosing(): boolean;
     dotsAndHash(): AttributeGroup | null;
-    mergeAttributeGroup(...groups: (AttributeGroup | null)[]): AttributeGroup[];
+    mergeAttributeGroup(context: Context, ...groups: (AttributeGroup | null)[]): AttributeGroup[];
 }
 export declare class EmptyTagCompiler extends TagCompiler {
     static create(node: SleetNode, stack: SleetStack): Compiler | undefined;

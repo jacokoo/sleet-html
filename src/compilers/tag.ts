@@ -38,7 +38,7 @@ export class TagCompiler implements Compiler {
     }
 
     attributes (context: Context) {
-        const groups = this.mergeAttributeGroup(...[this.dotsAndHash()].concat(this.tag.attributeGroups))
+        const groups = this.mergeAttributeGroup(context, ...[this.dotsAndHash()].concat(this.tag.attributeGroups))
         if (groups.length) context.push(' ')
         const sub = context.sub()
         groups.forEach(it => {
@@ -104,11 +104,11 @@ export class TagCompiler implements Compiler {
         return new AttributeGroup(attrs, undefined, location)
     }
 
-    mergeAttributeGroup (...groups: (AttributeGroup| null)[]) {
+    mergeAttributeGroup (context: Context, ...groups: (AttributeGroup| null)[]) {
         const gs = groups.filter(it => !!it) as AttributeGroup[]
         if (!gs.length) return []
         return [gs.reduce((acc, item) => {
-            acc.merge(item, true)
+            acc.merge(item, context.options.ignoreSetting !== false)
             return acc
         })]
     }
