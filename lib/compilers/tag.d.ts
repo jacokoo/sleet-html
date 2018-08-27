@@ -5,7 +5,7 @@ export declare class TagCompiler implements Compiler {
     protected tag: Tag;
     protected stack: SleetStack;
     constructor(node: Tag, stack: SleetStack);
-    compile(context: Context): void;
+    compile(context: Context, ...others: SleetNode[]): void;
     tagOpen(context: Context): void;
     openStart(context: Context): void;
     attributes(context: Context): void;
