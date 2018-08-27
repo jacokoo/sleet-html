@@ -1,6 +1,6 @@
 import {
     Compiler, Context, NodeType, SleetNode, SleetValue,
-    StringValue, BooleanValue, NumberValue, IdentifierValue
+    StringValue, BooleanValue, NumberValue, IdentifierValue, SleetStack
 } from 'sleet'
 
 abstract class ValueCompiler<T extends SleetValue<any>> implements Compiler {
@@ -16,28 +16,28 @@ abstract class ValueCompiler<T extends SleetValue<any>> implements Compiler {
 
 export class StringValueCompiler extends ValueCompiler<StringValue> {
     static type = NodeType.StringValue
-    static create (node: SleetNode, stack: SleetNode[]): Compiler | undefined {
+    static create (node: SleetNode): Compiler | undefined {
         return new StringValueCompiler(node as StringValue)
     }
 }
 
 export class BooleanValueCompiler extends ValueCompiler<BooleanValue> {
     static type = NodeType.BooleanValue
-    static create (node: SleetNode, stack: SleetNode[]): Compiler | undefined {
+    static create (node: SleetNode): Compiler | undefined {
         return new BooleanValueCompiler(node as BooleanValue)
     }
 }
 
 export class NumberValueCompiler extends ValueCompiler<NumberValue> {
     static type = NodeType.NumberValue
-    static create (node: SleetNode, stack: SleetNode[]): Compiler | undefined {
+    static create (node: SleetNode): Compiler | undefined {
         return new NumberValueCompiler(node as NumberValue)
     }
 }
 
 export class IdentifierValueCompiler extends ValueCompiler<IdentifierValue> {
     static type = NodeType.IdentifierValue
-    static create (node: SleetNode, stack: SleetNode[]): Compiler | undefined {
+    static create (node: SleetNode): Compiler | undefined {
         return new IdentifierValueCompiler(node as IdentifierValue)
     }
 }

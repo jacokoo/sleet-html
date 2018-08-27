@@ -1,15 +1,18 @@
-import { Context, Compiler, Location, NodeType, SleetNode, Tag, Attribute, StringValue, AttributeGroup } from 'sleet'
+import {
+    Context, Compiler, Location, NodeType, SleetNode, Tag,
+    Attribute, StringValue, AttributeGroup, SleetStack
+} from 'sleet'
 
 export class TagCompiler implements Compiler {
     static type = NodeType.Tag
-    static create (node: SleetNode, stack: SleetNode[]): Compiler | undefined {
+    static create (node: SleetNode, stack: SleetStack): Compiler | undefined {
         return new TagCompiler(node as Tag, stack)
     }
 
     protected tag: Tag
-    protected stack: SleetNode[]
+    protected stack: SleetStack
 
-    constructor (node: Tag, stack: SleetNode[]) {
+    constructor (node: Tag, stack: SleetStack) {
         this.tag = node
         this.stack = stack.concat(node)
     }
@@ -39,7 +42,7 @@ export class TagCompiler implements Compiler {
         if (groups.length) context.push(' ')
         const sub = context.sub()
         groups.forEach(it => {
-            const compiler = context.create(it, [this.tag])
+            const compiler = context.create(it, this.stack)
             if (compiler) compiler.compile(sub)
         })
         sub.mergeUp()
@@ -118,7 +121,7 @@ const emptyTags = [
 ]
 
 export class EmptyTagCompiler extends TagCompiler {
-    static create (node: SleetNode, stack: SleetNode[]): Compiler | undefined {
+    static create (node: SleetNode, stack: SleetStack): Compiler | undefined {
         const tag = node as Tag
         if (!tag.name || emptyTags.indexOf(tag.name) === -1) return undefined
         return new EmptyTagCompiler(tag, stack)

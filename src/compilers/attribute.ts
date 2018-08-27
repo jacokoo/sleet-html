@@ -1,15 +1,15 @@
-import { Compiler, Context, SleetNode, Attribute, NodeType, AttributeGroup } from 'sleet'
+import { Compiler, Context, SleetNode, Attribute, NodeType, AttributeGroup, SleetStack } from 'sleet'
 
 export class AttributeGroupCompiler implements Compiler {
     static type = NodeType.AttributeGroup
-    static create (node: SleetNode, stack: SleetNode[]): Compiler | undefined {
+    static create (node: SleetNode, stack: SleetStack): Compiler | undefined {
         return new AttributeGroupCompiler(node as AttributeGroup, stack)
     }
 
     private group: AttributeGroup
-    private stack: SleetNode[]
+    private stack: SleetStack
 
-    constructor (node: AttributeGroup, stack: SleetNode[]) {
+    constructor (node: AttributeGroup, stack: SleetStack) {
         this.group = node
         this.stack = stack
     }
@@ -27,14 +27,14 @@ export class AttributeGroupCompiler implements Compiler {
 
 export class AttributeCompiler implements Compiler {
     static type = NodeType.Attribute
-    static create (node: SleetNode, stack: SleetNode[]): Compiler | undefined {
+    static create (node: SleetNode, stack: SleetStack): Compiler | undefined {
         return new AttributeCompiler(node as Attribute, stack)
     }
 
     private node: Attribute
-    private stack: SleetNode[]
+    private stack: SleetStack
 
-    constructor (node: Attribute, stack: SleetNode[]) {
+    constructor (node: Attribute, stack: SleetStack) {
         this.node = node
         this.stack = stack.concat(node)
     }

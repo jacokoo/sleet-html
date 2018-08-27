@@ -1,4 +1,4 @@
-import { SleetPlugin, SleetOptions, SleetOutput, Context, CompileResult } from 'sleet'
+import { SleetPlugin, SleetOptions, SleetOutput, Context, CompileResult, SleetStack } from 'sleet'
 import { TagCompiler, EmptyTagCompiler } from './compilers/tag'
 import { TextCompiler } from './compilers/text'
 import { CommentCompiler, DoctypeCompiler, IeifCompiler, EchoCompiler } from './compilers/other-tags'
@@ -25,7 +25,7 @@ export const plugin = {
         const {nodes, declaration} = input
 
         nodes.forEach(it => {
-            const sub = context.compile(it, [], -1)
+            const sub = context.compile(it, new SleetStack(), -1)
             if (sub) sub.mergeUp()
         })
         return {

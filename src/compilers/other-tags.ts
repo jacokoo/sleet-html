@@ -1,8 +1,8 @@
-import { Compiler, Context, SleetNode, Tag, StringValue } from 'sleet'
+import { Compiler, Context, SleetNode, Tag, StringValue, SleetStack } from 'sleet'
 import { TagCompiler } from './tag'
 
 export class CommentCompiler extends TagCompiler {
-    static create (node: SleetNode, stack: SleetNode[]): Compiler | undefined {
+    static create (node: SleetNode, stack: SleetStack): Compiler | undefined {
         if ((node as Tag).name === '#') return new CommentCompiler(node as Tag, stack)
     }
 
@@ -24,7 +24,7 @@ export class CommentCompiler extends TagCompiler {
 }
 
 export class DoctypeCompiler extends TagCompiler {
-    static create (node: SleetNode, stack: SleetNode[]): Compiler | undefined {
+    static create (node: SleetNode, stack: SleetStack): Compiler | undefined {
         if ((node as Tag).name === 'doctype') return new DoctypeCompiler(node as Tag, stack)
     }
 
@@ -34,7 +34,7 @@ export class DoctypeCompiler extends TagCompiler {
 }
 
 export class IeifCompiler extends TagCompiler {
-    static create (node: SleetNode, stack: SleetNode[]): Compiler | undefined {
+    static create (node: SleetNode, stack: SleetStack): Compiler | undefined {
         const tag = node as Tag
 
         if (tag.name === 'ieif') return new IeifCompiler(tag, stack, false)
@@ -43,7 +43,7 @@ export class IeifCompiler extends TagCompiler {
 
     private closeIt: boolean
 
-    constructor(node: Tag, stack: SleetNode[], closeIt: boolean = false) {
+    constructor(node: Tag, stack: SleetStack, closeIt: boolean = false) {
         super(node, stack)
         this.closeIt = closeIt
     }
@@ -73,7 +73,7 @@ export class IeifCompiler extends TagCompiler {
 }
 
 export class EchoCompiler extends TagCompiler {
-    static create (node: SleetNode, stack: SleetNode[]): Compiler | undefined {
+    static create (node: SleetNode, stack: SleetStack): Compiler | undefined {
         if ((node as Tag).name === 'echo') return new EchoCompiler(node as Tag, stack)
     }
 
@@ -82,7 +82,7 @@ export class EchoCompiler extends TagCompiler {
         context.eol().indent()
 
         this.tag.attributeGroups.forEach(it => it.attributes.forEach(attr => attr.values.forEach(v => {
-            const stack = this.stack.concat(it, attr)
+            const stack = this.stack.concat([it, attr])
             const sub = context.compile(v, stack)
             if (sub) sub.mergeUp()
         })))

@@ -1,4 +1,4 @@
-import { Compiler, Context, NodeType, SleetNode, Tag } from 'sleet'
+import { Compiler, Context, NodeType, SleetNode, Tag, SleetStack } from 'sleet'
 
 const map: {[name: string]: string} = {
     '&': '&amp;',
@@ -16,7 +16,7 @@ const escapeHtml = (string: string) => string.replace(/[&<>"'`=\/]/g, s => map[s
 export class TextCompiler implements Compiler {
     static type = NodeType.Tag
 
-    static create (node: SleetNode, stack: SleetNode[]): Compiler | undefined {
+    static create (node: SleetNode, stack: SleetStack): Compiler | undefined {
         if ((node as Tag).name === '|') return new TextCompiler(node as Tag)
     }
 

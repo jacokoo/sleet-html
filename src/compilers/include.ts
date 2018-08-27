@@ -2,10 +2,10 @@ import * as fs from 'fs'
 import * as path from 'path'
 
 import { TagCompiler } from './tag'
-import { Compiler, Context, parse, SleetNode, StringValue, IdentifierValue, Tag } from 'sleet'
+import { Compiler, Context, parse, SleetNode, StringValue, IdentifierValue, Tag, SleetStack } from 'sleet'
 
 export class IncludeCompiler extends TagCompiler {
-    static create (node: SleetNode, stack: SleetNode[]): Compiler | undefined {
+    static create (node: SleetNode, stack: SleetStack): Compiler | undefined {
         if ((node as Tag).name === '@include') return new IncludeCompiler(node as Tag, stack)
     }
 

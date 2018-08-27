@@ -1,5 +1,5 @@
 import { TagCompiler } from './tag'
-import { Compiler, Context, SleetNode, Tag } from 'sleet'
+import { Compiler, Context, SleetNode, Tag, SleetStack } from 'sleet'
 
 interface Mixin {
     nodes: SleetNode[]
@@ -7,7 +7,7 @@ interface Mixin {
 }
 
 export class MixinDefineCompiler extends TagCompiler {
-    static create (node: SleetNode, stack: SleetNode[]): Compiler | undefined {
+    static create (node: SleetNode, stack: SleetStack): Compiler | undefined {
         if ((node as Tag).name === '@mixin') return new MixinDefineCompiler(node as Tag, stack)
     }
 
@@ -38,7 +38,7 @@ export class MixinDefineCompiler extends TagCompiler {
             const v = it.values[0]
             if (!v) return acc
 
-            const stack = this.stack.concat(this.tag.attributeGroups[0], it)
+            const stack = this.stack.concat([this.tag.attributeGroups[0], it])
             const sub = context.compile(v, stack)
             if (!sub) return acc
             const vv = sub.getOutput()
@@ -50,7 +50,7 @@ export class MixinDefineCompiler extends TagCompiler {
 }
 
 export class MixinReferenceCompiler extends MixinDefineCompiler {
-    static create (node: SleetNode, stack: SleetNode[]): Compiler | undefined {
+    static create (node: SleetNode, stack: SleetStack): Compiler | undefined {
         if ((node as Tag).name === 'mixin') return new MixinReferenceCompiler(node as Tag, stack)
     }
 

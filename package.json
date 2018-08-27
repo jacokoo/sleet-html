@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "Sleetjs is little language that compiles into HTML",
   "author": "Jaco Koo <jaco.koo@guyong.in>",
+  "main": "lib/index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/JacoKoo/sleet-html.git"
