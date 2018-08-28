@@ -32,6 +32,6 @@
     "ts": "tslint src/**/*.ts && tsc",
     "clean": "rm -rf lib dist",
     "dist": "rollup -c",
-    "build": "npm-run-all clean ts dist"
+    "build": "npm-run-all clean ts dist test"
   }
 }

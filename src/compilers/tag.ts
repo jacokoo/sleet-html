@@ -1,20 +1,12 @@
 import {
     Context, Compiler, Location, NodeType, SleetNode, Tag,
-    Attribute, StringValue, AttributeGroup, SleetStack
+    Attribute, StringValue, AttributeGroup, SleetStack, AbstractCompiler
 } from 'sleet'
 
-export class TagCompiler implements Compiler {
+export class TagCompiler extends AbstractCompiler<Tag> {
     static type = NodeType.Tag
     static create (node: SleetNode, stack: SleetStack): Compiler | undefined {
         return new TagCompiler(node as Tag, stack)
-    }
-
-    protected tag: Tag
-    protected stack: SleetStack
-
-    constructor (node: Tag, stack: SleetStack) {
-        this.tag = node
-        this.stack = stack.concat(node)
     }
 
     compile (context: Context, ...others: SleetNode[]) {
@@ -31,19 +23,22 @@ export class TagCompiler implements Compiler {
 
     openStart (context: Context) {
         context.eol().indent().push('<')
-        if (this.tag.namespace) {
-            context.push(this.tag.namespace).push(':')
+        if (this.node.namespace) {
+            context.push(this.node.namespace).push(':')
         }
-        context.push(this.tag.name || 'div')
+        context.push(this.node.name || 'div')
     }
 
     attributes (context: Context) {
-        const groups = this.mergeAttributeGroup(context, ...[this.dotsAndHash()].concat(this.tag.attributeGroups))
+        const groups = this.mergeAttributeGroup(context, ...[this.dotsAndHash()].concat(this.node.attributeGroups))
         if (groups.length) context.push(' ')
         groups.forEach((it, idx) => {
             const sub = context.compile(it, this.stack)
-            if (idx) context.push(' ')
-            if (sub) sub.mergeUp()
+
+            if (sub) {
+                if (idx) context.push(' ')
+                sub.mergeUp()
+            }
         })
     }
 
@@ -53,21 +48,17 @@ export class TagCompiler implements Compiler {
 
     content (context: Context) {
         if (this.selfClosing()) return
-
-        this.tag.children.forEach(it => {
-            const sub = context.compile(it, this.stack)
-            if (sub) sub.mergeUp()
-        })
+        this.node.children.forEach(it => context.compileUp(it, this.stack))
     }
 
     tagClose (context: Context) {
         if (this.selfClosing()) return
         if (context.haveIndent) context.eol().indent()
         context.push('</')
-        if (this.tag.namespace) {
-            context.push(this.tag.namespace).push(':')
+        if (this.node.namespace) {
+            context.push(this.node.namespace).push(':')
         }
-        context.push(this.tag.name || 'div').push('>')
+        context.push(this.node.name || 'div').push('>')
     }
 
     selfClosing () {
@@ -75,14 +66,14 @@ export class TagCompiler implements Compiler {
     }
 
     dotsAndHash () {
-        if (!this.tag.hash && !this.tag.dots.length) return null
+        if (!this.node.hash && !this.node.dots.length) return null
 
-        const s = this.tag.location.start
+        const s = this.node.location.start
         let e
-        if (this.tag.attributeGroups.length) {
-            e = this.tag.attributeGroups[0].location.start
+        if (this.node.attributeGroups.length) {
+            e = this.node.attributeGroups[0].location.start
         } else {
-            e = this.tag.location.end
+            e = this.node.location.end
         }
         const location = {
             start: {offset: s.offset, line: s.line, column: s.column},
@@ -90,13 +81,13 @@ export class TagCompiler implements Compiler {
         } as Location
 
         const attrs = [] as Attribute[]
-        if (this.tag.hash) {
-            const value = [new StringValue(this.tag.hash, location)]
+        if (this.node.hash) {
+            const value = [new StringValue(this.node.hash, location)]
             attrs.push(new Attribute(undefined, 'id', value, location))
         }
 
-        if (this.tag.dots.length) {
-            const value = this.tag.dots.map(it => new StringValue(it, location))
+        if (this.node.dots.length) {
+            const value = this.node.dots.map(it => new StringValue(it, location))
             attrs.push(new Attribute(undefined, 'class', value, location))
         }
 

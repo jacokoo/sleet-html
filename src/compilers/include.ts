@@ -15,21 +15,18 @@ export class IncludeCompiler extends TagCompiler {
         const file = path.resolve(dir, this.getPath())
 
         const {nodes} = parse(fs.readFileSync(file, 'utf-8'))
-        nodes.forEach(it => {
-            const sub = context.compile(it, this.stack, -1)
-            if (sub) sub.mergeUp()
-        })
+        nodes.forEach(it => context.compileUp(it, this.stack, -1))
     }
 
     getPath () {
-        if (this.tag.attributeGroups.length) {
-            const v = this.tag.attributeGroups[0].attributes[0].values[0]
+        if (this.node.attributeGroups.length) {
+            const v = this.node.attributeGroups[0].attributes[0].values[0]
             if (v) {
                 if (v instanceof StringValue) return v.value
                 if (v instanceof IdentifierValue) return v.value
             }
         }
-        const {line, column} = this.tag.location.start
+        const {line, column} = this.node.location.start
         throw new SyntaxError(`no file specified, line: ${line} column: ${column}`)
     }
 }

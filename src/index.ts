@@ -24,10 +24,7 @@ export const plugin = {
     compile (input: CompileResult, options: SleetOptions, context: Context): SleetOutput {
         const {nodes, declaration} = input
 
-        nodes.forEach(it => {
-            const sub = context.compile(it, new SleetStack(), -1)
-            if (sub) sub.mergeUp()
-        })
+        nodes.forEach(it => context.compileUp(it, new SleetStack(), -1))
         return {
             code: context.getOutput(),
             extension: (declaration && declaration.extension) || 'html'

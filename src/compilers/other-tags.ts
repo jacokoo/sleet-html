@@ -18,7 +18,7 @@ export class CommentCompiler extends TagCompiler {
     }
 
     inline () {
-        const node = this.tag.children[0]
+        const node = this.node.children[0]
         return node && node.namespace === 'inline'
     }
 }
@@ -57,8 +57,8 @@ export class IeifCompiler extends TagCompiler {
     }
 
     attributes (context: Context) {
-        if (this.tag.attributeGroups.length) {
-            const attr = this.tag.attributeGroups[0].attributes[0]
+        if (this.node.attributeGroups.length) {
+            const attr = this.node.attributeGroups[0].attributes[0]
             if (attr && attr.values[0] && attr.values[0] instanceof StringValue) {
                 const v = attr.values[0] as StringValue
                 context.push(v.value)
@@ -78,13 +78,12 @@ export class EchoCompiler extends TagCompiler {
     }
 
     compile (context: Context) {
-        if (!this.tag.attributeGroups.length) return
+        if (!this.node.attributeGroups.length) return
         context.eol().indent()
 
-        this.tag.attributeGroups.forEach(it => it.attributes.forEach(attr => attr.values.forEach(v => {
+        this.node.attributeGroups.forEach(it => it.attributes.forEach(attr => attr.values.forEach(v => {
             const stack = this.stack.concat([it, attr])
-            const sub = context.compile(v, stack)
-            if (sub) sub.mergeUp()
+            context.compileUp(v, stack)
         })))
     }
 }

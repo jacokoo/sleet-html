@@ -1,18 +1,12 @@
-import { Compiler, Context, SleetNode, Attribute, NodeType, AttributeGroup, SleetStack } from 'sleet';
-export declare class AttributeGroupCompiler implements Compiler {
+import { Compiler, Context, SleetNode, Attribute, NodeType, AttributeGroup, SleetStack, AbstractCompiler } from 'sleet';
+export declare class AttributeGroupCompiler extends AbstractCompiler<AttributeGroup> {
     static type: NodeType;
     static create(node: SleetNode, stack: SleetStack): Compiler | undefined;
-    private group;
-    private stack;
-    constructor(node: AttributeGroup, stack: SleetStack);
     compile(context: Context): void;
 }
-export declare class AttributeCompiler implements Compiler {
+export declare class AttributeCompiler extends AbstractCompiler<Attribute> {
     static type: NodeType;
     static create(node: SleetNode, stack: SleetStack): Compiler | undefined;
-    private node;
-    private stack;
-    constructor(node: Attribute, stack: SleetStack);
     compile(context: Context): void;
     key(context: Context): string;
     value(context: Context): string;

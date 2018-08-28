@@ -1,10 +1,7 @@
-import { Context, Compiler, NodeType, SleetNode, Tag, AttributeGroup, SleetStack } from 'sleet';
-export declare class TagCompiler implements Compiler {
+import { Context, Compiler, NodeType, SleetNode, Tag, AttributeGroup, SleetStack, AbstractCompiler } from 'sleet';
+export declare class TagCompiler extends AbstractCompiler<Tag> {
     static type: NodeType;
     static create(node: SleetNode, stack: SleetStack): Compiler | undefined;
-    protected tag: Tag;
-    protected stack: SleetStack;
-    constructor(node: Tag, stack: SleetStack);
     compile(context: Context, ...others: SleetNode[]): void;
     tagOpen(context: Context): void;
     openStart(context: Context): void;

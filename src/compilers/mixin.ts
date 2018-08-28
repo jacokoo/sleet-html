@@ -12,33 +12,33 @@ export class MixinDefineCompiler extends TagCompiler {
     }
 
     compile (context: Context) {
-        if (!this.tag.hash) {
+        if (!this.node.hash) {
             throw new Error('Hash property is required for mixin definition. eg. @mixin#name')
         }
 
-        if (this.tag.indent !== 0) {
+        if (this.node.indent !== 0) {
             throw new Error('Mixin definition must be placed in top level(the indent of it must be 0)')
         }
 
         if (!context.note.mixin) context.note.mixin = {}
-        if (context.note.mixin[this.tag.hash]) {
-            throw new Error(`Mixin definition #${this.tag.hash} have already defined`)
+        if (context.note.mixin[this.node.hash]) {
+            throw new Error(`Mixin definition #${this.node.hash} have already defined`)
         }
 
-        context.note.mixin[this.tag.hash] = {
-            nodes: this.tag.children,
+        context.note.mixin[this.node.hash] = {
+            nodes: this.node.children,
             replacement: this.replacement(context)
         } as Mixin
     }
 
     replacement (context: Context): {[name: string]: any} {
-        if (!this.tag.attributeGroups.length) return {}
-        const attrs = this.tag.attributeGroups[0].attributes
+        if (!this.node.attributeGroups.length) return {}
+        const attrs = this.node.attributeGroups[0].attributes
         return attrs.reduce((acc, it) => {
             const v = it.values[0]
             if (!v) return acc
 
-            const stack = this.stack.concat([this.tag.attributeGroups[0], it])
+            const stack = this.stack.concat([this.node.attributeGroups[0], it])
             const sub = context.compile(v, stack)
             if (!sub) return acc
             const vv = sub.getOutput()
@@ -55,19 +55,16 @@ export class MixinReferenceCompiler extends MixinDefineCompiler {
     }
 
     compile (context: Context) {
-        if (!this.tag.hash) {
+        if (!this.node.hash) {
             throw new Error('Hash property is required for mixin reference. eg. mixin#name')
         }
 
-        if (!context.note.mixin || !context.note.mixin[this.tag.hash]) {
-            throw new Error(`Mixin #${this.tag.hash} is not defined`)
+        if (!context.note.mixin || !context.note.mixin[this.node.hash]) {
+            throw new Error(`Mixin #${this.node.hash} is not defined`)
         }
-        const def = context.note.mixin[this.tag.hash] as Mixin
+        const def = context.note.mixin[this.node.hash] as Mixin
         const ctx = context.sub()
-        def.nodes.forEach(it => {
-            const sub = ctx.compile(it, this.stack, -2)
-            if (sub) sub.mergeUp()
-        })
+        def.nodes.forEach(it => ctx.compileUp(it, this.stack, -2))
 
         const output = ctx.getOutput()
         const actual = Object.assign({}, def.replacement, this.replacement(context))
