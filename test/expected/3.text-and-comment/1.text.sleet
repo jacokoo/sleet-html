@@ -20,6 +20,10 @@ d
            text
                block
 
+e
+    same-indent..
+    hello indent
+
 combined inline text
     | pipeline text
     |.
